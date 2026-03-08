@@ -1,0 +1,6 @@
+{
+  "tokenAddress": "0xDec175080322AE03BF27ccd5f1251ae4483BA3A8",
+  "exchangeAddress": "0xE68af5277bD493cB925f1d7bf23c6d07c21726e2",
+  "chainSelectorName": "ethereum-testnet-sepolia-base-1",
+  "gasLimit": "500000"
+}

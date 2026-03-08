@@ -9,13 +9,10 @@ import { cn } from "@/lib/utils"
 
 const FILTER_OPTIONS = [
   "All assets",
-  "ETF",
   "Technology",
   "Consumer",
-  "Financials",
   "Large Cap",
   "Growth",
-  "Value",
 ]
 
 const SORT_OPTIONS = [

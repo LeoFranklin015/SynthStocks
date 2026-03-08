@@ -1,21 +1,21 @@
 {
   "schedule": "*/60 * * * * *",
   "finnhubApiKey": "d5vipc9r01qqiqhvae20d5vipc9r01qqiqhvae2g",
-  "symbol": "NVDA",
+  "symbol": "AMZN",
   "chains": [
     {
       "chainSelectorName": "ethereum-testnet-sepolia-base-1",
-      "priceReceiverAddress": "0x4C431CcDC0C5E8052688ddfBfCA29eCAb0A13004",
+      "priceReceiverAddress": "0xa557588A3cdAe68aA45eB547089c1BE1D40D80f6",
       "gasLimit": "500000"
     },
     {
       "chainSelectorName": "ethereum-testnet-sepolia-arbitrum-1",
-      "priceReceiverAddress": "0x3dD1d100ef7A7F13cA773C37b03c91F3Ee726801",
+      "priceReceiverAddress": "0xa71962B98e599e5c0e842614bF39f6aC2ba5D90a",
       "gasLimit": "500000"
     },
     {
       "chainSelectorName": "avalanche-testnet-fuji",
-      "priceReceiverAddress": "0x8798658D38eF346f0d8da3a1E1b22906744dA4a8",
+      "priceReceiverAddress": "0x81edcA17fd818177fad91b2c61D4c752dC19FC13",
       "gasLimit": "500000"
     }
   ]

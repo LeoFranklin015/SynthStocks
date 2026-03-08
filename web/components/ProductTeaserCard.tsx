@@ -172,18 +172,10 @@ export const ProductTeaserCard = (props: ProductTeaserCardProps) => {
 }
 
 const STOCK_TICKERS = [
-  { ticker: "AAPL", name: "Apple" },
-  { ticker: "AMZN", name: "Amazon" },
-  { ticker: "GOOG", name: "Alphabet" },
-  { ticker: "MSFT", name: "Microsoft" },
-  { ticker: "TSLA", name: "Tesla" },
   { ticker: "NVDA", name: "NVIDIA" },
-  { ticker: "PFE", name: "Pfizer" },
-  { ticker: "INTC", name: "Intel" },
-  { ticker: "SOFI", name: "SoFi" },
-  { ticker: "OPEN", name: "Opendoor" },
+  { ticker: "TSLA", name: "Tesla" },
+  { ticker: "AMZN", name: "Amazon" },
   { ticker: "META", name: "Meta" },
-  { ticker: "NFLX", name: "Netflix" },
-  { ticker: "AMD", name: "AMD" },
-  { ticker: "JPM", name: "JPMorgan" },
+  { ticker: "AAPL", name: "Apple" },
+  { ticker: "GOOG", name: "Alphabet" },
 ]

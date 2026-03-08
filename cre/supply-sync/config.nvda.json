@@ -1,0 +1,23 @@
+{
+  "schedule": "*/60 * * * * *",
+  "chains": [
+    {
+      "chainSelectorName": "ethereum-testnet-sepolia-base-1",
+      "tokenAddress": "0x902AaC3BFccA522fFaa710C08557c597eC70FC12",
+      "exchangeAddress": "0xCdb4524125f18cB4574D50aBa20896aDD0f48e76",
+      "gasLimit": "500000"
+    },
+    {
+      "chainSelectorName": "ethereum-testnet-sepolia-arbitrum-1",
+      "tokenAddress": "0xC74064583AecE6d906c8891bb3CD6cf8400bf08e",
+      "exchangeAddress": "0xA6A43e98c06A21dd6A5618c05D73f34dc305BF21",
+      "gasLimit": "500000"
+    },
+    {
+      "chainSelectorName": "avalanche-testnet-fuji",
+      "tokenAddress": "0xcfCd2286Fb39D98a50BEF8ee08D50BC4f4c9cE60",
+      "exchangeAddress": "0x7FAEFA4eac0522749E841C34d9E503420468D5Ac",
+      "gasLimit": "500000"
+    }
+  ]
+}

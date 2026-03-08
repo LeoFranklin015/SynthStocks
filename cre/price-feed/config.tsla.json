@@ -1,21 +1,21 @@
 {
   "schedule": "*/60 * * * * *",
   "finnhubApiKey": "d5vipc9r01qqiqhvae20d5vipc9r01qqiqhvae2g",
-  "symbol": "NVDA",
+  "symbol": "TSLA",
   "chains": [
     {
       "chainSelectorName": "ethereum-testnet-sepolia-base-1",
-      "priceReceiverAddress": "0x4C431CcDC0C5E8052688ddfBfCA29eCAb0A13004",
+      "priceReceiverAddress": "0x009a12D17110335758bDC915ec10F8E96ebB8C9E",
       "gasLimit": "500000"
     },
     {
       "chainSelectorName": "ethereum-testnet-sepolia-arbitrum-1",
-      "priceReceiverAddress": "0x3dD1d100ef7A7F13cA773C37b03c91F3Ee726801",
+      "priceReceiverAddress": "0x0f1083E172514962d3C9535cb58A688F6E7df0c8",
       "gasLimit": "500000"
     },
     {
       "chainSelectorName": "avalanche-testnet-fuji",
-      "priceReceiverAddress": "0x8798658D38eF346f0d8da3a1E1b22906744dA4a8",
+      "priceReceiverAddress": "0xA9BC871C5E8823D40b7dCCa88356eE9f88D2d5BB",
       "gasLimit": "500000"
     }
   ]

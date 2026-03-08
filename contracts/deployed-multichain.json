@@ -1,32 +1,185 @@
 {
-  "baseSepolia": {
-    "network": "baseSepolia",
-    "deployer": "0x79bE9Dd3CfB1542fA04CE3954224d1fa71FFf704",
-    "token": "0x40469e2c7572F24007bEB59C2e413FB60e2cdDa1",
-    "implementation": "0x16F669477dfc0469BC4BAdE2fe49c61Ad8c8259C",
-    "proxyAdmin": "0xF2F978E5C565e409a5aE1Cf1495aF811E7b13ff2",
-    "priceReceiver": "0x1705e9E7456AE90B7fD29bAa9228C71F63CdFeE0",
-    "exchange": "0xBA37b69AA7846E704B055f53456A649aDF113541",
-    "sanctionsList": "0xdC1377f512B3cCD98BeDdD9377346Ea4F31fEd9F",
-    "usdc": "0x036CbD53842c5426634e7929541eC2318f3dCF7e",
-    "globalSupplyCap": "1000",
-    "maxHoldingBps": 500,
-    "testPrice": "$1.00",
-    "deployedAt": "2026-03-08T08:27:06.480Z"
-  },
   "arbSepolia": {
-    "network": "arbSepolia",
     "deployer": "0x79bE9Dd3CfB1542fA04CE3954224d1fa71FFf704",
-    "token": "0x9fd74211C9C9585e6159B074AC7cEADEc9751a11",
-    "implementation": "0x2d4e4523B461DC76167EAF4B1b5ed9151C8A922b",
-    "proxyAdmin": "0x3Be7c3Df256E23B43c12dD4e935EbC4c172A9440",
-    "priceReceiver": "0x00CAA614b2CE256266737C16eAd000d8AD56A148",
-    "exchange": "0x803A14FaC343C1C8FeEAd0dfE41442715e21fb3D",
-    "sanctionsList": "0xdC1D55B20430Bc2D923Ba6981b33Af6a2b899a93",
     "usdc": "0x75faf114eafb1BDbe2F0316DF893fd58CE46AA4d",
-    "globalSupplyCap": "1000",
-    "maxHoldingBps": 500,
-    "testPrice": "$1.00",
-    "deployedAt": "2026-03-08T08:28:15.024Z"
+    "deployedAt": "2026-03-08T13:52:44.606Z",
+    "tokens": {
+      "sNVDA": {
+        "token": "0xC74064583AecE6d906c8891bb3CD6cf8400bf08e",
+        "implementation": "0x212E3342029eCEF2333726311DfBaaEE6cC2CC88",
+        "proxyAdmin": "0xf7c03185d886433A44A467132e92ff1270e96352",
+        "priceReceiver": "0x3dD1d100ef7A7F13cA773C37b03c91F3Ee726801",
+        "exchange": "0xA6A43e98c06A21dd6A5618c05D73f34dc305BF21",
+        "sanctionsList": "0xDB8945E2E31Ed39b6c29A27b3492251502e9064c",
+        "price": "$131.29"
+      },
+      "sTSLA": {
+        "token": "0xC960Cd2AAfEa9DeEddaf5a77c798F774Bdc29375",
+        "implementation": "0x8F23dD75007D21E808e750a90b6C14F5a54d742e",
+        "proxyAdmin": "0x7e5c8993dc1c73db793f444ab16dB5cB61566Fd9",
+        "priceReceiver": "0x0f1083E172514962d3C9535cb58A688F6E7df0c8",
+        "exchange": "0x82F91EBa70022112D1881d77Fcb9cDc79bE250BF",
+        "sanctionsList": "0xCC54602Fa2BDA98d1597EdE7Cd5aE597389F7371",
+        "price": "$271.34"
+      },
+      "sAMZN": {
+        "token": "0x3C6fF7136B27e9C5DC6ee8DB2eFB9B6706ba4943",
+        "implementation": "0x144e234f28CC0D902c57EdfAdd5eA3812B7310E6",
+        "proxyAdmin": "0x9c9316aB7298A177336D31B5840eBBb547c70Af7",
+        "priceReceiver": "0xa71962B98e599e5c0e842614bF39f6aC2ba5D90a",
+        "exchange": "0x6105CCfe7522C0F45E91dbb5dD161862A8Ae01ea",
+        "sanctionsList": "0xcdcB354a9754fc390AcF5C0770539c76ca6951BF",
+        "price": "$205.74"
+      },
+      "sMETA": {
+        "token": "0x8de59610221b7b5351Bff81424d1Ba9665260036",
+        "implementation": "0xe9c4e3eB3783390fAbBAA55C943bb500038d9608",
+        "proxyAdmin": "0x4417C93a203374F94839e45AFBf862fbfa82e46C",
+        "priceReceiver": "0xCC79112c4f2a5c9347DE851ADc2286eD458c8b38",
+        "exchange": "0x91f2601B27C1EA080E929Ff15621513080Fffb5E",
+        "sanctionsList": "0x446Fe4497aA6Fb4A68dE2c18C61821c3D436477b",
+        "price": "$596.25"
+      },
+      "sAAPL": {
+        "token": "0xB5599A5C70688370Ada483E226D62Ff0e5EF8c06",
+        "implementation": "0xb2197368A38D2eF7e6dCdcA1b668f4eE381dB302",
+        "proxyAdmin": "0x3558279d647d3712160F212370A6A46E7C085005",
+        "priceReceiver": "0x2d102Bb9a8778533119af954755939f8A4D8AAB5",
+        "exchange": "0x2E13E8D7F920F6E8D5f2918b9E318a126e18D394",
+        "sanctionsList": "0xee6b5c8D3f958f00eB59d7F73eE59F68645588E4",
+        "price": "$227.48"
+      },
+      "sGOOG": {
+        "token": "0x32Ce0323fe3120e5C1E3775416810e46EA71f268",
+        "implementation": "0x3cA65c0410d558B3672C9eA9ad990e19AA94AF08",
+        "proxyAdmin": "0xc85191e1f4F6c306254F569004EE53d70Adbf852",
+        "priceReceiver": "0x326928D26fD2A2210F0bbB16864FE07a25AB068A",
+        "exchange": "0x3BDdA18Ea8547Abb60607Cd102EA1d44e05e99F8",
+        "sanctionsList": "0x13e4C3b1296e431Ab4cDe02CE1B766A63421D737",
+        "price": "$170.00"
+      }
+    }
+  },
+  "baseSepolia": {
+    "deployer": "0x79bE9Dd3CfB1542fA04CE3954224d1fa71FFf704",
+    "usdc": "0x036CbD53842c5426634e7929541eC2318f3dCF7e",
+    "deployedAt": "2026-03-08T14:06:00.164Z",
+    "tokens": {
+      "sNVDA": {
+        "token": "0x902AaC3BFccA522fFaa710C08557c597eC70FC12",
+        "implementation": "0xa9EeE794b84920A1399D7e779F178487E08A12F8",
+        "proxyAdmin": "0x4d172b55b8Cd1DD0E60EBA1bebE6217eA89AD18B",
+        "priceReceiver": "0x4C431CcDC0C5E8052688ddfBfCA29eCAb0A13004",
+        "exchange": "0xCdb4524125f18cB4574D50aBa20896aDD0f48e76",
+        "sanctionsList": "0xfC520178a0E20F15814cF89f6e7DE3aE3E930031",
+        "price": "$131.29"
+      },
+      "sTSLA": {
+        "token": "0x893FD22ee7808D06657c7076eb93F9f9e7431c8E",
+        "implementation": "0x210Db52879C0E373A7735eFF81760b589DDFFC47",
+        "proxyAdmin": "0xbaCec0Ca385Bc61C413087c617fc230304B7D395",
+        "priceReceiver": "0x009a12D17110335758bDC915ec10F8E96ebB8C9E",
+        "exchange": "0x699564803392067cc4b567a686CcBdd71Ae873A6",
+        "sanctionsList": "0x0A5540d9AD2145cC29ced8dFD8D686588Cf854BC",
+        "price": "$271.34"
+      },
+      "sAMZN": {
+        "token": "0x6fb7280E1995101c0eEfa436aE5E8E0C5E9e7Dc9",
+        "implementation": "0xc8184787858bea50F49321870CF593f9031121F2",
+        "proxyAdmin": "0x58eB78C3Fe70Da23A8a41C2c56005667b69011DA",
+        "priceReceiver": "0xa557588A3cdAe68aA45eB547089c1BE1D40D80f6",
+        "exchange": "0xFb797d09c6a766aCfDC72043fd698A60CeF12758",
+        "sanctionsList": "0xB848C05c7d28332B16765BA266F6acff1879014d",
+        "price": "$205.74"
+      },
+      "sMETA": {
+        "token": "0xDec175080322AE03BF27ccd5f1251ae4483BA3A8",
+        "implementation": "0x497C223913034c5e14972a32F1fEacbF89dBe4A3",
+        "proxyAdmin": "0xb49cB115e4188a885Ef85b2ADcb1A0a92661D447",
+        "priceReceiver": "0x3144Bc2662eF692bB9c7769BBC20DE9dDF74DbD5",
+        "exchange": "0xE68af5277bD493cB925f1d7bf23c6d07c21726e2",
+        "sanctionsList": "0x96D548563433546f1e745A5B39A6488319dc7FA5",
+        "price": "$596.25"
+      },
+      "sAAPL": {
+        "token": "0xCEA1Ff3051DF8c6AeB1613726E33F9096897d90E",
+        "implementation": "0x1c28e426395aB083cd3d33F38C533D54aeD1eE2C",
+        "proxyAdmin": "0xC0877Cd62A7eC90a5A629E8c78f29BA00808d501",
+        "priceReceiver": "0x444AF1a99C6b8a234DEe74d7d73d4607C777a4Bf",
+        "exchange": "0x795ddE50254e7EFB99dd78107E49eF04B0282775",
+        "sanctionsList": "0xB1c701cfC267DB0c24A302C582EF51B6A6E6257F",
+        "price": "$227.48"
+      },
+      "sGOOG": {
+        "token": "0x25d056a8D975c4021ec99d6EAF3bbaE29B37E6Ad",
+        "implementation": "0x1Dcc993696Ac412f3c55641B0F561e06747b88cE",
+        "proxyAdmin": "0xeCaA77Adf5d7d49088E7a0F9a4007FaB08d78dE5",
+        "priceReceiver": "0x7394C9f1dAeda2Cb48D372a16F246176E6D5B798",
+        "exchange": "0x954Ab678641D53FfE6186d9E5f8bA7E8E8a68D66",
+        "sanctionsList": "0xE322DBDa0F20eB85CA4c35225eb33CA13930378F",
+        "price": "$170.00"
+      }
+    }
+  },
+  "avalancheFuji": {
+    "deployer": "0x79bE9Dd3CfB1542fA04CE3954224d1fa71FFf704",
+    "usdc": "0x5425890298aed601595a70AB815c96711a31Bc65",
+    "deployedAt": "2026-03-08T13:52:44.606Z",
+    "tokens": {
+      "sNVDA": {
+        "token": "0xcfCd2286Fb39D98a50BEF8ee08D50BC4f4c9cE60",
+        "implementation": "0xeA77b677b5B41aaB01abD7c37804707D51e94079",
+        "proxyAdmin": "0x22D609bE8673B9ff4C35C37D90FE487E0491fD25",
+        "priceReceiver": "0x8798658D38eF346f0d8da3a1E1b22906744dA4a8",
+        "exchange": "0x7FAEFA4eac0522749E841C34d9E503420468D5Ac",
+        "sanctionsList": "0xB93cd048496130d4aB742CDea04ae41D335396b5",
+        "price": "$131.29"
+      },
+      "sTSLA": {
+        "token": "0xbed3f19Ce35d0ba7f0C196496bac694f1BcF2485",
+        "implementation": "0xFE6c4Ae5bFeF6364009120DEc2641c67E01Fc802",
+        "proxyAdmin": "0x8324918E2F07bC2922af16913E6372AEaeA9ec89",
+        "priceReceiver": "0xA9BC871C5E8823D40b7dCCa88356eE9f88D2d5BB",
+        "exchange": "0x1c6062B2B7Ac90edD5C22eb24e9Ba24B30deaE34",
+        "sanctionsList": "0x5Ff920D4458FCA8456d2801377E69a12F25bD817",
+        "price": "$271.34"
+      },
+      "sAMZN": {
+        "token": "0x2d5FEdAee4Beb33F68B233fD5A683d643E7f3c32",
+        "implementation": "0xEE38a7D39C2D0D9D8935362318Dc2a660611f28B",
+        "proxyAdmin": "0x8F512b0aD4ef5C90cd3829f7F6D9082bbDa2720F",
+        "priceReceiver": "0x81edcA17fd818177fad91b2c61D4c752dC19FC13",
+        "exchange": "0x365f3d85046aCF9dA5330ED89EE0bc4019257fb3",
+        "sanctionsList": "0xfd814D17f76b6a45e7d5b821Ca988a881433880c",
+        "price": "$205.74"
+      },
+      "sMETA": {
+        "token": "0x531b2a05343fe1dA4072FBcbF50516D61018156E",
+        "implementation": "0x6A18aC6B1D80777FA4674eEa6762fa4618FfB7b4",
+        "proxyAdmin": "0x12A9d70F11459507Ff6e37670A4022cE3696E272",
+        "priceReceiver": "0x96E4b333F337ae26DE78395Fc0a3b04b21Da2a87",
+        "exchange": "0x3Be7c3Df256E23B43c12dD4e935EbC4c172A9440",
+        "sanctionsList": "0x9fd74211C9C9585e6159B074AC7cEADEc9751a11",
+        "price": "$596.25"
+      },
+      "sAAPL": {
+        "token": "0x2770bE0a21c50d64Cc4c9a785c99aa3ee87a32b2",
+        "implementation": "0x83d5E821C3Df56142dF0916268aa90CE51e672A5",
+        "proxyAdmin": "0x373577FaB3F2bCD30e89B5b272c8492b3f8AeF4C",
+        "priceReceiver": "0x334774dBA53FA9446CafE28c9e662377A722d1e0",
+        "exchange": "0xBE13DFE558258DDafD69aD8359D84527383DD56f",
+        "sanctionsList": "0x90b29eC445Ef1f06dF41cf69b8B5Bf8c39246f23",
+        "price": "$227.48"
+      },
+      "sGOOG": {
+        "token": "0xff60939ac463b3Ae9d53EF61FDFB0e0DeB7b0166",
+        "implementation": "0x179bD6AFB61e54415f9B0a67D2fcFB5F719a59FF",
+        "proxyAdmin": "0x7Fd04881795E75be4148Ea73Fc581044375E24ca",
+        "priceReceiver": "0x64FD34B29F5E9B734c5257704643261409e4F9b4",
+        "exchange": "0x009CB9c80aDd6Da66ABe7652B7623548903518dD",
+        "sanctionsList": "0xB3382f652a464E41b834c676d433F99e3C4E716c",
+        "price": "$170.00"
+      }
+    }
   }
 }

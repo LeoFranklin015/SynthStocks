@@ -2,11 +2,21 @@
   "schedule": "*/60 * * * * *",
   "finnhubApiKey": "d5vipc9r01qqiqhvae20d5vipc9r01qqiqhvae2g",
   "symbol": "GOOG",
-  "priceReceiverAddress": "0xac79de9331D68328f3e1656b2a698889C5EfA1d9",
   "chains": [
-    { "chainSelectorName": "ethereum-testnet-sepolia", "gasLimit": "500000" },
-    { "chainSelectorName": "ethereum-testnet-sepolia-base-1", "gasLimit": "500000" },
-    { "chainSelectorName": "ethereum-testnet-sepolia-arbitrum-1", "gasLimit": "500000" },
-    { "chainSelectorName": "ethereum-testnet-sepolia-worldchain-1", "gasLimit": "500000" }
+    {
+      "chainSelectorName": "ethereum-testnet-sepolia-base-1",
+      "priceReceiverAddress": "0x7394C9f1dAeda2Cb48D372a16F246176E6D5B798",
+      "gasLimit": "500000"
+    },
+    {
+      "chainSelectorName": "ethereum-testnet-sepolia-arbitrum-1",
+      "priceReceiverAddress": "0x326928D26fD2A2210F0bbB16864FE07a25AB068A",
+      "gasLimit": "500000"
+    },
+    {
+      "chainSelectorName": "avalanche-testnet-fuji",
+      "priceReceiverAddress": "0x64FD34B29F5E9B734c5257704643261409e4F9b4",
+      "gasLimit": "500000"
+    }
   ]
 }

@@ -1,12 +1,14 @@
 /**
- * CRE Backend Server
+ * CRE Backend Server (Multichain / Multi-Token)
  *
  * Long-running process that:
- *   1. Calls price-feed CRE workflow every 30 seconds
- *   2. Watches for UserVerified events → triggers verify-sync CRE workflow
- *   3. Watches for Buy events → triggers supply-sync CRE workflow
+ *   1. Calls price-feed CRE workflow every 30 seconds for each token
+ *   2. Watches for UserVerified events on primary chain → triggers verify-sync
+ *   3. Watches for Buy/Sell events on all chains → triggers supply-sync
  *
- * Usage: node scripts/cre-backend.js
+ * Usage:
+ *   node scripts/cre-backend.js              # runs all 6 tokens
+ *   node scripts/cre-backend.js sAAPL sNVDA  # runs only specified tokens
  */
 const { ethers } = require("ethers");
 const { readFileSync } = require("fs");
@@ -14,25 +16,41 @@ const { execSync } = require("child_process");
 const path = require("path");
 
 // ─── Config ──────────────────────────────────────────────────────────────────
-const CRE_DIR = path.resolve(__dirname, "../cre");
-const addresses = JSON.parse(
+const CRE_DIR = path.resolve(__dirname, "../../cre");
+const DEPLOYED = JSON.parse(
   readFileSync(path.resolve(__dirname, "../deployed-multichain.json"), "utf8")
 );
 
 const CHAINS = [
   {
+    key: "baseSepolia",
     name: "Base Sepolia",
     rpc: "https://sepolia.base.org",
-    exchange: addresses.baseSepolia.exchange,
   },
   {
+    key: "arbSepolia",
     name: "Arb Sepolia",
     rpc: "https://sepolia-rollup.arbitrum.io/rpc",
-    exchange: addresses.arbSepolia.exchange,
+  },
+  {
+    key: "avalancheFuji",
+    name: "Avalanche Fuji",
+    rpc: "https://api.avax-test.network/ext/bc/C/rpc",
   },
 ];
 
-const PRIMARY_CHAIN = CHAINS[0]; // Base Sepolia is primary
+const PRIMARY_CHAIN = CHAINS[0]; // Base Sepolia is primary for verify-sync
+
+const ALL_TOKENS = ["sAAPL", "sNVDA", "sTSLA", "sAMZN", "sMETA", "sGOOG"];
+
+const SYMBOL_TO_CONFIG = {
+  sAAPL: "aapl",
+  sNVDA: "nvda",
+  sTSLA: "tsla",
+  sAMZN: "amzn",
+  sMETA: "meta",
+  sGOOG: "goog",
+};
 
 const EXCHANGE_ABI = [
   "event UserVerified(address indexed user, uint256 nullifierHash)",
@@ -42,18 +60,27 @@ const EXCHANGE_ABI = [
 
 const PRICE_FEED_INTERVAL_MS = 30_000;
 
-// ─── CRE runner ──────────────────────────────────────────────────────────────
-let creRunning = { priceFeed: false, verifySync: false, supplySync: false };
+// Select tokens from CLI args or default to all
+const selectedTokens = process.argv.length > 2
+  ? process.argv.slice(2).filter((t) => ALL_TOKENS.includes(t))
+  : ALL_TOKENS;
 
-function runCre(workflowName, args, label) {
+// ─── CRE runner ──────────────────────────────────────────────────────────────
+const creRunning = {};
+
+function runCre(workflowName, args, label, configFile) {
+  const configArg = configFile ? `--config-file ${configFile}` : "";
   const cmd = [
     "cre workflow simulate",
     workflowName,
     "--target staging-settings",
     "--non-interactive",
+    configArg,
     ...args,
     "--broadcast",
-  ].join(" ");
+  ]
+    .filter(Boolean)
+    .join(" ");
 
   console.log(`  [${label}] $ ${cmd}`);
 
@@ -63,10 +90,8 @@ function runCre(workflowName, args, label) {
       encoding: "utf8",
       timeout: 180_000,
     });
-    // Print all USER LOG lines
     const logLines = output.split("\n").filter((l) => l.includes("[USER LOG]"));
     logLines.forEach((l) => console.log(`  [${label}] ${l.trim()}`));
-    // Print result
     const resultMatch = output.match(/Workflow Simulation Result:\n"(.+)"/);
     if (resultMatch) {
       console.log(`  [${label}] Result: ${resultMatch[1]}`);
@@ -82,143 +107,154 @@ function runCre(workflowName, args, label) {
   }
 }
 
-// ─── 1. Price Feed (every 30s) ──────────────────────────────────────────────
+// ─── 1. Price Feed (every 30s, one per token) ───────────────────────────────
 function startPriceFeed() {
   async function tick() {
-    if (creRunning.priceFeed) {
-      console.log("[price-feed] Previous run still active, skipping.\n");
-      return;
-    }
     const ts = new Date().toISOString();
-    console.log(`[${ts}] Running price-feed...`);
-    creRunning.priceFeed = true;
-    try {
-      runCre("price-feed", ["--trigger-index 0"], "price-feed");
-    } finally {
-      creRunning.priceFeed = false;
+    for (const token of selectedTokens) {
+      const runKey = `priceFeed:${token}`;
+      if (creRunning[runKey]) {
+        console.log(`[price-feed:${token}] Previous run still active, skipping.`);
+        continue;
+      }
+      console.log(`[${ts}] Running price-feed for ${token}...`);
+      creRunning[runKey] = true;
+      try {
+        const configFile = `config.${SYMBOL_TO_CONFIG[token]}.json`;
+        runCre("price-feed", ["--trigger-index 0"], `price-feed:${token}`, configFile);
+      } finally {
+        creRunning[runKey] = false;
+      }
     }
   }
 
-  // Run immediately, then every 30s
   tick();
   setInterval(tick, PRICE_FEED_INTERVAL_MS);
   console.log(
-    `[price-feed] Scheduled every ${PRICE_FEED_INTERVAL_MS / 1000}s\n`
+    `[price-feed] Scheduled every ${PRICE_FEED_INTERVAL_MS / 1000}s for ${selectedTokens.length} tokens\n`
   );
 }
 
-// ─── 2. Verify Sync (event-driven) ─────────────────────────────────────────
+// ─── 2. Verify Sync (event-driven on primary chain) ─────────────────────────
 function startVerifyWatcher() {
   const provider = new ethers.providers.JsonRpcProvider(PRIMARY_CHAIN.rpc);
-  const exchange = new ethers.Contract(
-    PRIMARY_CHAIN.exchange,
-    EXCHANGE_ABI,
-    provider
-  );
+  const chainData = DEPLOYED[PRIMARY_CHAIN.key];
 
-  console.log(
-    `[verify-sync] Watching UserVerified on ${PRIMARY_CHAIN.name} (${PRIMARY_CHAIN.exchange})\n`
-  );
+  for (const token of selectedTokens) {
+    const tokenData = chainData.tokens[token];
+    if (!tokenData) continue;
 
-  exchange.on("UserVerified", async (user, nullifierHash, event) => {
-    const txHash = event.transactionHash;
-    const ts = new Date().toISOString();
-    console.log(`[${ts}] UserVerified detected!`);
-    console.log(`  User: ${user}`);
-    console.log(`  Nullifier: ${nullifierHash.toString().slice(0, 20)}...`);
-    console.log(`  Tx: ${txHash}`);
-
-    if (creRunning.verifySync) {
-      console.log(
-        "  [verify-sync] Previous run still active, queuing skipped.\n"
-      );
-      return;
-    }
-    creRunning.verifySync = true;
-    try {
-      runCre(
-        "verify-sync",
-        [
-          "--trigger-index 0",
-          `--evm-tx-hash ${txHash}`,
-          "--evm-event-index 0",
-        ],
-        "verify-sync"
-      );
-    } finally {
-      creRunning.verifySync = false;
-    }
-  });
-
-  // Reconnect on error
-  provider.on("error", (err) => {
-    console.error("[verify-sync] Provider error:", err.message);
-  });
-}
-
-// ─── 3. Supply Sync (event-driven on Buy/Sell) ─────────────────────────────
-function startSupplySyncWatcher() {
-  for (const chain of CHAINS) {
-    const provider = new ethers.providers.JsonRpcProvider(chain.rpc);
     const exchange = new ethers.Contract(
-      chain.exchange,
+      tokenData.exchange,
       EXCHANGE_ABI,
       provider
     );
 
     console.log(
-      `[supply-sync] Watching Buy/Sell on ${chain.name} (${chain.exchange})\n`
+      `[verify-sync:${token}] Watching UserVerified on ${PRIMARY_CHAIN.name} (${tokenData.exchange})`
     );
 
-    exchange.on("Buy", async (buyer, usdcAmount, tokenAmount, event) => {
+    exchange.on("UserVerified", async (user, nullifierHash, event) => {
+      const txHash = event.transactionHash;
       const ts = new Date().toISOString();
-      console.log(`[${ts}] Buy detected on ${chain.name}!`);
-      console.log(`  Buyer: ${buyer}, USDC: ${ethers.utils.formatUnits(usdcAmount, 6)}, xAAPL: ${ethers.utils.formatUnits(tokenAmount, 18)}`);
-      console.log(`  Tx: ${event.transactionHash}`);
+      console.log(`[${ts}] UserVerified for ${token}!`);
+      console.log(`  User: ${user}, Tx: ${txHash}`);
 
-      if (creRunning.supplySync) {
-        console.log("  [supply-sync] Previous run still active, skipping.\n");
+      const runKey = `verifySync:${token}`;
+      if (creRunning[runKey]) {
+        console.log(`  [verify-sync:${token}] Previous run still active, skipping.`);
         return;
       }
-      creRunning.supplySync = true;
+      creRunning[runKey] = true;
       try {
-        runCre("supply-sync", ["--trigger-index 0"], "supply-sync");
+        const configFile = `config.${SYMBOL_TO_CONFIG[token]}.json`;
+        runCre(
+          "verify-sync",
+          [
+            "--trigger-index 0",
+            `--evm-tx-hash ${txHash}`,
+            "--evm-event-index 0",
+          ],
+          `verify-sync:${token}`,
+          configFile
+        );
       } finally {
-        creRunning.supplySync = false;
+        creRunning[runKey] = false;
       }
     });
+  }
 
-    exchange.on("Sell", async (seller, usdcAmount, tokenAmount, event) => {
-      const ts = new Date().toISOString();
-      console.log(`[${ts}] Sell detected on ${chain.name}!`);
-      console.log(`  Seller: ${seller}, USDC: ${ethers.utils.formatUnits(usdcAmount, 6)}, xAAPL: ${ethers.utils.formatUnits(tokenAmount, 18)}`);
-      console.log(`  Tx: ${event.transactionHash}`);
+  provider.on("error", (err) => {
+    console.error("[verify-sync] Provider error:", err.message);
+  });
 
-      if (creRunning.supplySync) {
-        console.log("  [supply-sync] Previous run still active, skipping.\n");
-        return;
-      }
-      creRunning.supplySync = true;
-      try {
-        runCre("supply-sync", ["--trigger-index 0"], "supply-sync");
-      } finally {
-        creRunning.supplySync = false;
-      }
-    });
+  console.log();
+}
+
+// ─── 3. Supply Sync (event-driven on Buy/Sell, all chains) ──────────────────
+function startSupplySyncWatcher() {
+  for (const chain of CHAINS) {
+    const provider = new ethers.providers.JsonRpcProvider(chain.rpc);
+    const chainData = DEPLOYED[chain.key];
+
+    for (const token of selectedTokens) {
+      const tokenData = chainData.tokens[token];
+      if (!tokenData) continue;
+
+      const exchange = new ethers.Contract(
+        tokenData.exchange,
+        EXCHANGE_ABI,
+        provider
+      );
+
+      console.log(
+        `[supply-sync:${token}] Watching Buy/Sell on ${chain.name} (${tokenData.exchange})`
+      );
+
+      const handleEvent = async (eventType, buyer, usdcAmount, tokenAmount, event) => {
+        const ts = new Date().toISOString();
+        console.log(`[${ts}] ${eventType} for ${token} on ${chain.name}!`);
+        console.log(`  ${buyer}, USDC: ${ethers.utils.formatUnits(usdcAmount, 6)}`);
+        console.log(`  Tx: ${event.transactionHash}`);
+
+        const runKey = `supplySync:${token}`;
+        if (creRunning[runKey]) {
+          console.log(`  [supply-sync:${token}] Previous run still active, skipping.`);
+          return;
+        }
+        creRunning[runKey] = true;
+        try {
+          const configFile = `config.${SYMBOL_TO_CONFIG[token]}.json`;
+          runCre("supply-sync", ["--trigger-index 0"], `supply-sync:${token}`, configFile);
+        } finally {
+          creRunning[runKey] = false;
+        }
+      };
+
+      exchange.on("Buy", (buyer, usdcAmount, tokenAmount, event) =>
+        handleEvent("Buy", buyer, usdcAmount, tokenAmount, event)
+      );
+      exchange.on("Sell", (seller, usdcAmount, tokenAmount, event) =>
+        handleEvent("Sell", seller, usdcAmount, tokenAmount, event)
+      );
+    }
 
     provider.on("error", (err) => {
       console.error(`[supply-sync] ${chain.name} provider error:`, err.message);
     });
   }
+
+  console.log();
 }
 
 // ─── Main ────────────────────────────────────────────────────────────────────
 function main() {
   console.log("╔══════════════════════════════════════════════════╗");
-  console.log("║          SynthStocks CRE Backend Server             ║");
+  console.log("║       xStocks CRE Backend Server (Multichain)   ║");
   console.log("╚══════════════════════════════════════════════════╝\n");
-  console.log(`Primary chain: ${PRIMARY_CHAIN.name} (${PRIMARY_CHAIN.exchange})`);
+  console.log(`Tokens: ${selectedTokens.join(", ")}`);
   console.log(`Chains: ${CHAINS.map((c) => c.name).join(", ")}`);
+  console.log(`Primary chain: ${PRIMARY_CHAIN.name}`);
   console.log(`CRE dir: ${CRE_DIR}\n`);
 
   startVerifyWatcher();

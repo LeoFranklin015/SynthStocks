@@ -114,13 +114,19 @@ export function AssetColumns({ assets, loading }: AssetColumnsProps) {
   const topGainers = [...assets]
     .filter((a) => a.change24hPercent > 0)
     .sort((a, b) => b.change24hPercent - a.change24hPercent)
-    .slice(0, 5)
+    .slice(0, 6)
 
-  const trending = assets.length >= 9
-    ? [assets[0], assets[1], assets[6], assets[7], assets[8]]
-    : assets.slice(0, 5)
+  const trending = [...assets]
+    .sort((a, b) => b.price - a.price)
+    .slice(0, 6)
 
-  const newlyAdded = assets.filter((a) => a.addedDate).slice(0, 5)
+  const topLosers = [...assets]
+    .filter((a) => a.change24hPercent < 0)
+    .sort((a, b) => a.change24hPercent - b.change24hPercent)
+    .slice(0, 6)
+
+  // Fallback: if no losers, show by market cap
+  const thirdColumn = topLosers.length > 0 ? topLosers : [...assets].slice(0, 6)
 
   if (loading && assets.every((a) => !a.isLive)) {
     return (
@@ -147,9 +153,9 @@ export function AssetColumns({ assets, loading }: AssetColumnsProps) {
         delay={0.15}
       />
       <Column
-        title="Newly Added"
-        items={newlyAdded}
-        type="newlyAdded"
+        title={topLosers.length > 0 ? "Top Losers" : "By Market Cap"}
+        items={thirdColumn}
+        type="gainers"
         delay={0.2}
       />
     </div>
