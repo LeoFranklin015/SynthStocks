@@ -1,7 +1,6 @@
 "use client"
 
 import { useState, useMemo, useEffect } from "react"
-import Link from "next/link"
 import {
   AreaChart,
   Area,
@@ -15,11 +14,11 @@ import { ChevronDown, ArrowDown, HelpCircle, Loader2 } from "lucide-react"
 import type { AssetData } from "@/lib/assets"
 import { useAssetDetail } from "@/hooks/useAssetDetail"
 import { cn, getStockLogoUrl } from "@/lib/utils"
-import { useAccount, useReadContract, useWriteContract, usePublicClient } from "wagmi"
+import { useAccount, useReadContract, useSendCalls } from "wagmi"
 import { useConnect } from "@jaw.id/wagmi"
 import { config } from "@/config/wagmi"
 import { toast } from "sonner"
-import { parseUnits, formatUnits } from "viem"
+import { parseUnits, formatUnits, encodeFunctionData } from "viem"
 import {
   USDC_ADDRESS,
   EXCHANGE_ADDRESS,
@@ -91,8 +90,7 @@ export function AssetDetailView({ asset }: { asset: AssetData }) {
     query: { enabled: !!address },
   })
 
-  const { writeContractAsync } = useWriteContract()
-  const publicClient = usePublicClient()
+  const { sendCallsAsync } = useSendCalls()
 
   const chartData = useMemo(() => {
     if (liveData.chartData?.length) {
@@ -157,88 +155,68 @@ export function AssetDetailView({ asset }: { asset: AssetData }) {
     }
 
     const usdcAmount = parseUnits(amount.toString(), USDC_DECIMALS)
+    const MAX_UINT256 = BigInt("0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff")
 
     setIsProcessing(true)
     try {
-      const MAX_UINT256 = BigInt("0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff")
+      const calls: { to: `0x${string}`; data: `0x${string}` }[] = []
 
       if (activeTab === "buy") {
-        // Check USDC balance
         if (usdcBalance && (usdcBalance as bigint) < usdcAmount) {
           toast.error(`Insufficient USDC. Balance: $${formattedUsdcBalance}`)
           return
         }
 
-        // Step 1: Approve USDC if needed (use max approval so future buys don't need it)
+        // Include approve if allowance is insufficient
         const currentAllowance = (usdcAllowance as bigint) ?? BigInt(0)
         if (currentAllowance < usdcAmount) {
-          setTxStep("approving")
-          toast.info("Approving USDC for exchange...")
-          const approveTxHash = await writeContractAsync({
-            address: USDC_ADDRESS,
-            abi: ERC20_ABI,
-            functionName: "approve",
-            args: [EXCHANGE_ADDRESS, MAX_UINT256],
+          calls.push({
+            to: USDC_ADDRESS,
+            data: encodeFunctionData({
+              abi: ERC20_ABI,
+              functionName: "approve",
+              args: [EXCHANGE_ADDRESS, MAX_UINT256],
+            }),
           })
-          // Wait for the approve tx to be mined before proceeding
-          if (publicClient) {
-            toast.info("Waiting for approval confirmation...")
-            await publicClient.waitForTransactionReceipt({ hash: approveTxHash })
-          }
-          toast.success("USDC approved!")
-          await refetchAllowance()
         }
 
-        // Step 2: Buy
+        calls.push({
+          to: EXCHANGE_ADDRESS,
+          data: encodeFunctionData({
+            abi: EXCHANGE_ABI,
+            functionName: "buy",
+            args: [tokenAddress, usdcAmount],
+          }),
+        })
+
         setTxStep("trading")
         toast.info(`Buying ${asset.ticker}...`)
-        const buyTx = await writeContractAsync({
-          address: EXCHANGE_ADDRESS,
-          abi: EXCHANGE_ABI,
-          functionName: "buy",
-          args: [tokenAddress, usdcAmount],
-        })
+        await sendCallsAsync({ calls })
         toast.success(`Bought ${receiveAmount} ${asset.ticker} for $${payAmount}`)
+        await refetchAllowance()
       } else {
-        // Sell: user pays tokens, gets USDC
-        // Step 1: Approve token to exchange if needed
-        const tokenAllowanceResult = tokenAddress && address
-          ? await publicClient?.readContract({
-              address: tokenAddress,
-              abi: ERC20_ABI,
-              functionName: "allowance",
-              args: [address, EXCHANGE_ADDRESS],
-            })
-          : BigInt(0)
-        const currentTokenAllowance = (tokenAllowanceResult as bigint) ?? BigInt(0)
-
-        // For sell, usdcAmount is the USDC value; we need to approve the token amount
-        const tokenAmountToSell = parseUnits(receiveAmount || "0", 18)
-        if (currentTokenAllowance < tokenAmountToSell) {
-          setTxStep("approving")
-          toast.info(`Approving ${asset.ticker} for exchange...`)
-          const approveTxHash = await writeContractAsync({
-            address: tokenAddress,
+        // Sell: always batch approve + sell
+        calls.push({
+          to: tokenAddress,
+          data: encodeFunctionData({
             abi: ERC20_ABI,
             functionName: "approve",
             args: [EXCHANGE_ADDRESS, MAX_UINT256],
-          })
-          if (publicClient) {
-            toast.info("Waiting for approval confirmation...")
-            await publicClient.waitForTransactionReceipt({ hash: approveTxHash })
-          }
-          toast.success(`${asset.ticker} approved!`)
-        }
+          }),
+        })
 
-        // Step 2: Sell
+        calls.push({
+          to: EXCHANGE_ADDRESS,
+          data: encodeFunctionData({
+            abi: EXCHANGE_ABI,
+            functionName: "sell",
+            args: [tokenAddress, usdcAmount],
+          }),
+        })
+
         setTxStep("trading")
         toast.info(`Selling ${asset.ticker}...`)
-        const sellTx = await writeContractAsync({
-          address: EXCHANGE_ADDRESS,
-          abi: EXCHANGE_ABI,
-          functionName: "sell",
-          args: [tokenAddress, usdcAmount],
-        })
+        await sendCallsAsync({ calls })
         toast.success(`Sold ${receiveAmount} ${asset.ticker} for $${payAmount}`)
       }
 

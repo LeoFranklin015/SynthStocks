@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, useCallback } from "react"
+import { useState, useCallback, useEffect } from "react"
 import { motion, AnimatePresence } from "framer-motion"
 import {
   IDKitRequestWidget,
@@ -42,6 +42,8 @@ export default function VerifyPage() {
   const [widgetOpen, setWidgetOpen] = useState(false)
   const [rpContext, setRpContext] = useState<RpContext | null>(null)
   const { address: walletAddress, isConnected } = useAccount()
+  const [mounted, setMounted] = useState(false)
+  useEffect(() => setMounted(true), [])
 
   const appId = process.env.NEXT_PUBLIC_WLD_APP_ID ?? ""
   const rpId = process.env.NEXT_PUBLIC_WLD_RP_ID ?? ""
@@ -236,7 +238,7 @@ export default function VerifyPage() {
                     ))}
                   </div>
 
-                  {!isConnected && (
+                  {mounted && !isConnected && (
                     <div className="w-full py-3 rounded-xl bg-[#171717] border border-[#1e1e1e] text-center mb-4">
                       <p className="text-xs text-amber-400">Connect your wallet first to enable on-chain allowlisting</p>
                     </div>
@@ -246,10 +248,10 @@ export default function VerifyPage() {
                     <button
                       type="button"
                       onClick={startVerification}
-                      disabled={!isConnected}
+                      disabled={!mounted || !isConnected}
                       className={cn(
                         "w-full py-4 rounded-xl font-semibold text-sm flex items-center justify-center gap-2.5 transition-colors",
-                        isConnected
+                        mounted && isConnected
                           ? "bg-white text-black hover:bg-white/90 cursor-pointer"
                           : "bg-[#333] text-[#737373] cursor-not-allowed"
                       )}
