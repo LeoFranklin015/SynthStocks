@@ -7,6 +7,7 @@ import { useConnect, useDisconnect } from "@jaw.id/wagmi"
 import { config } from "@/config/wagmi"
 import { Copy, LogOut, Check } from "lucide-react"
 import { useUsdcBalances } from "@/hooks/useUsdcBalances"
+import { VerificationGate } from "./VerificationGate"
 
 export function Navbar() {
   const { address, isConnected, chain } = useAccount()
@@ -189,6 +190,9 @@ export function Navbar() {
           </button>
         )}
       </div>
+
+      {/* Auto-trigger World ID verification when connected + not verified */}
+      <VerificationGate />
     </nav>
   )
 }
