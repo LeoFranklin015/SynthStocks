@@ -21,6 +21,7 @@ import {
 import { Navbar } from "@/components/Navbar"
 import { getStockLogoUrl, cn } from "@/lib/utils"
 import { usePortfolio } from "@/hooks/usePortfolio"
+import { useUsdcBalances } from "@/hooks/useUsdcBalances"
 
 const ALLOC_COLORS = [
   "#22c55e", "#3b82f6", "#f59e0b", "#8b5cf6", "#ec4899", "#06b6d4",
@@ -39,6 +40,8 @@ function formatTimeAgo(timestamp: number): string {
 export default function PortfolioPage() {
   const [activeTab, setActiveTab] = useState<"holdings" | "activity">("holdings")
   const { positions, trades, totalValue, totalVolumeUSDC, loading, error } = usePortfolio()
+  const { balances: usdcBalances, totalUsdc } = useUsdcBalances()
+  const [showUsdcBreakdown, setShowUsdcBreakdown] = useState(false)
 
   const allocData = positions.map((p, i) => ({
     name: p.asset.ticker,
@@ -69,9 +72,46 @@ export default function PortfolioPage() {
                 ${totalValue.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
               </h1>
             </div>
-            <p className="text-xs text-[#737373] mt-2">
-              Total value of synthetic positions &middot; Volume: ${totalVolumeUSDC.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 })} USDC
-            </p>
+            <div className="flex items-center gap-4 mt-3">
+              <div
+                className="relative"
+                onMouseEnter={() => setShowUsdcBreakdown(true)}
+                onMouseLeave={() => setShowUsdcBreakdown(false)}
+              >
+                <div className="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-[#0c0c0c] border border-[#1e1e1e] cursor-default">
+                  <div className="flex -space-x-1.5">
+                    {usdcBalances.map((b) => (
+                      <img key={b.chainId} src={b.icon} alt={b.chainName} className="w-4 h-4 rounded-full ring-1 ring-black" />
+                    ))}
+                  </div>
+                  <span className="text-sm font-medium text-[#ededed] tabular-nums">
+                    {totalUsdc.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 })} USDC
+                  </span>
+                </div>
+
+                {showUsdcBreakdown && (
+                  <div className="absolute top-full left-0 mt-2 w-56 rounded-xl bg-[#0c0c0c] border border-[#1e1e1e] p-3 shadow-xl z-50">
+                    <p className="text-[10px] text-[#737373] uppercase tracking-wider font-medium mb-2.5">Balance by chain</p>
+                    <div className="space-y-2.5">
+                      {usdcBalances.map((b) => (
+                        <div key={b.chainId} className="flex items-center justify-between">
+                          <div className="flex items-center gap-2">
+                            <img src={b.icon} alt={b.chainName} className="w-4 h-4 rounded-full" />
+                            <span className="text-xs text-[#737373]">{b.chainName}</span>
+                          </div>
+                          <span className="text-xs text-[#ededed] font-medium tabular-nums">
+                            {b.balance.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+                          </span>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                )}
+              </div>
+              <span className="text-xs text-[#737373]">
+                Volume: ${totalVolumeUSDC.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 })} USDC
+              </span>
+            </div>
           </motion.div>
 
           {/* ── Loading / Error / Empty ── */}
@@ -349,6 +389,7 @@ export default function PortfolioPage() {
                         <span className="text-[#ededed] font-medium">{val}</span>
                       </div>
                     ))}
+
                   </div>
                 </motion.div>
               </div>

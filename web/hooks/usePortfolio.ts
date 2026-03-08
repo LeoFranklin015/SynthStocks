@@ -1,8 +1,8 @@
 "use client"
 
 import { useState, useEffect, useCallback } from "react"
-import { useAccount, useChainId } from "wagmi"
-import { querySubgraph } from "@/lib/subgraph"
+import { useAccount } from "wagmi"
+import { querySubgraph, SUPPORTED_CHAIN_IDS } from "@/lib/subgraph"
 import { ASSETS, type AssetData } from "@/lib/assets"
 
 // ── Subgraph response types ──
@@ -39,13 +39,14 @@ interface SubgraphUser {
 export interface PortfolioPosition {
   asset: AssetData
   tokenAddress: string
-  balance: number       // token balance (18 decimals → human)
+  balance: number
   totalBought: number
   totalSold: number
-  totalVolumeUSDC: number // USDC volume (6 decimals → human)
+  totalVolumeUSDC: number
   flagged: boolean
   currentPrice: number
-  value: number         // balance * currentPrice
+  value: number
+  chainId: number
 }
 
 export interface PortfolioTrade {
@@ -57,6 +58,7 @@ export interface PortfolioTrade {
   tokenAmount: number
   timestamp: number
   transactionHash: string
+  chainId: number
 }
 
 export interface PortfolioData {
@@ -98,13 +100,11 @@ const PORTFOLIO_QUERY = `
 `
 
 function toHuman18(raw: string): number {
-  const n = Number(raw)
-  return n / 1e18
+  return Number(raw) / 1e18
 }
 
 function toHuman6(raw: string): number {
-  const n = Number(raw)
-  return n / 1e6
+  return Number(raw) / 1e6
 }
 
 function findAssetByAddress(address: string): AssetData | undefined {
@@ -115,7 +115,6 @@ function findAssetByAddress(address: string): AssetData | undefined {
 
 export function usePortfolio(): PortfolioData {
   const { address, isConnected } = useAccount()
-  const chainId = useChainId()
   const [positions, setPositions] = useState<PortfolioPosition[]>([])
   const [trades, setTrades] = useState<PortfolioTrade[]>([])
   const [verified, setVerified] = useState(false)
@@ -134,63 +133,77 @@ export function usePortfolio(): PortfolioData {
     setError(null)
 
     try {
-      const data = await querySubgraph<{ user: SubgraphUser | null }>(
-        chainId,
-        PORTFOLIO_QUERY,
-        { user: address.toLowerCase() }
+      // Query all 3 chains in parallel
+      const results = await Promise.allSettled(
+        SUPPORTED_CHAIN_IDS.map((chainId) =>
+          querySubgraph<{ user: SubgraphUser | null }>(
+            chainId,
+            PORTFOLIO_QUERY,
+            { user: address.toLowerCase() }
+          ).then((data) => ({ chainId, data }))
+        )
       )
 
-      if (!data.user) {
-        setPositions([])
-        setTrades([])
-        setVerified(false)
-        setLoading(false)
-        return
+      let allPositions: PortfolioPosition[] = []
+      let allTrades: PortfolioTrade[] = []
+      let isVerified = false
+
+      for (const result of results) {
+        if (result.status !== "fulfilled") continue
+        const { chainId, data } = result.value
+        if (!data.user) continue
+
+        if (data.user.verified) isVerified = true
+
+        const chainPositions = data.user.positions
+          .map((p) => {
+            const tokenAddr = p.token.id
+            const asset = findAssetByAddress(tokenAddr)
+            if (!asset) return null
+            const balance = toHuman18(p.balance)
+            return {
+              asset,
+              tokenAddress: tokenAddr,
+              balance,
+              totalBought: toHuman18(p.totalBought),
+              totalSold: toHuman18(p.totalSold),
+              totalVolumeUSDC: toHuman6(p.totalVolumeUSDC),
+              flagged: p.flagged,
+              currentPrice: asset.price,
+              value: balance * asset.price,
+              chainId,
+            }
+          })
+          .filter((p): p is PortfolioPosition => p !== null)
+
+        const chainTrades = data.user.trades.map((t) => ({
+          id: `${chainId}-${t.id}`,
+          type: t.type,
+          asset: findAssetByAddress(t.token.id),
+          tokenAddress: t.token.id,
+          usdcAmount: toHuman6(t.usdcAmount),
+          tokenAmount: toHuman18(t.tokenAmount),
+          timestamp: Number(t.timestamp),
+          transactionHash: t.transactionHash,
+          chainId,
+        }))
+
+        allPositions = allPositions.concat(chainPositions)
+        allTrades = allTrades.concat(chainTrades)
       }
 
-      setVerified(data.user.verified)
+      allPositions.sort((a, b) => b.value - a.value)
+      allTrades.sort((a, b) => b.timestamp - a.timestamp)
 
-      const mappedPositions: PortfolioPosition[] = data.user.positions
-        .map((p) => {
-          const tokenAddr = p.token.id
-          const asset = findAssetByAddress(tokenAddr)
-          if (!asset) return null
-          const balance = toHuman18(p.balance)
-          const currentPrice = asset.price
-          return {
-            asset,
-            tokenAddress: tokenAddr,
-            balance,
-            totalBought: toHuman18(p.totalBought),
-            totalSold: toHuman18(p.totalSold),
-            totalVolumeUSDC: toHuman6(p.totalVolumeUSDC),
-            flagged: p.flagged,
-            currentPrice,
-            value: balance * currentPrice,
-          }
-        })
-        .filter((p): p is PortfolioPosition => p !== null)
-        .sort((a, b) => b.value - a.value)
-
-      const mappedTrades: PortfolioTrade[] = data.user.trades.map((t) => ({
-        id: t.id,
-        type: t.type,
-        asset: findAssetByAddress(t.token.id),
-        tokenAddress: t.token.id,
-        usdcAmount: toHuman6(t.usdcAmount),
-        tokenAmount: toHuman18(t.tokenAmount),
-        timestamp: Number(t.timestamp),
-        transactionHash: t.transactionHash,
-      }))
-
-      setPositions(mappedPositions)
-      setTrades(mappedTrades)
+      setVerified(isVerified)
+      setPositions(allPositions)
+      setTrades(allTrades.slice(0, 20))
     } catch (err) {
       setError(err instanceof Error ? err.message : "Failed to load portfolio")
     } finally {
       setLoading(false)
     }
-  }, [address, isConnected, chainId])
+  }, [address, isConnected])
 
   useEffect(() => {
     fetchPortfolio()

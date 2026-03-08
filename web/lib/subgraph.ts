@@ -4,6 +4,8 @@ const SUBGRAPH_URLS: Record<number, string> = {
   43113: "https://api.studio.thegraph.com/query/1743917/synth-token-avax/version/latest",      // Avalanche Fuji
 }
 
+export const SUPPORTED_CHAIN_IDS = Object.keys(SUBGRAPH_URLS).map(Number)
+
 export function getSubgraphUrl(chainId: number): string | null {
   return SUBGRAPH_URLS[chainId] ?? null
 }

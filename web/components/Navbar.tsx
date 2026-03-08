@@ -6,6 +6,7 @@ import { formatUnits } from "viem"
 import { useConnect, useDisconnect } from "@jaw.id/wagmi"
 import { config } from "@/config/wagmi"
 import { Copy, LogOut, Check } from "lucide-react"
+import { useUsdcBalances } from "@/hooks/useUsdcBalances"
 
 export function Navbar() {
   const { address, isConnected, chain } = useAccount()
@@ -47,6 +48,8 @@ export function Navbar() {
       setTimeout(() => setCopied(false), 1500)
     }
   }
+
+  const { balances: usdcBalances, totalUsdc } = useUsdcBalances()
 
   const formatBalance = (val: string) => {
     const num = parseFloat(val)
@@ -129,18 +132,28 @@ export function Navbar() {
                     </div>
                   </div>
 
-                  {/* Balance */}
-                  {balance && (
-                    <div className="bg-white/[0.04] rounded-xl px-3 py-2.5">
-                      <p className="text-[11px] text-white/40 mb-0.5">Balance</p>
-                      <p className="text-[16px] font-semibold text-white">
-                        {formatBalance(formatUnits(balance.value, balance.decimals))}{" "}
-                        <span className="text-[12px] font-normal text-white/50">
-                          {balance.symbol}
-                        </span>
+                  {/* USDC Balance */}
+                  <div className="bg-white/[0.04] rounded-xl px-3 py-2.5">
+                    <div className="flex items-center justify-between mb-2">
+                      <p className="text-[11px] text-white/40">USDC</p>
+                      <p className="text-[14px] font-semibold text-white tabular-nums">
+                        {totalUsdc.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
                       </p>
                     </div>
-                  )}
+                    <div className="space-y-1.5">
+                      {usdcBalances.map((b) => (
+                        <div key={b.chainId} className="flex items-center justify-between">
+                          <div className="flex items-center gap-1.5">
+                            <img src={b.icon} alt={b.chainName} className="w-3.5 h-3.5 rounded-full" />
+                            <span className="text-[11px] text-white/40">{b.chainName}</span>
+                          </div>
+                          <span className="text-[11px] text-white/60 tabular-nums">
+                            {b.balance.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+                          </span>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
                 </div>
 
                 {/* Actions */}

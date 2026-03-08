@@ -1,5 +1,5 @@
 import { createConfig, http } from "wagmi"
-import { base, arbitrumSepolia } from "wagmi/chains"
+import { baseSepolia, arbitrumSepolia, avalancheFuji } from "wagmi/chains"
 import { jaw } from "@jaw.id/wagmi"
 import { Mode } from "@jaw.id/core"
 import { ReactUIHandler } from "@jaw.id/ui"
@@ -7,7 +7,7 @@ import { ReactUIHandler } from "@jaw.id/ui"
 const uiHandler = typeof window !== "undefined" ? new ReactUIHandler() : undefined
 
 export const config = createConfig({
-  chains: [base, arbitrumSepolia],
+  chains: [baseSepolia, arbitrumSepolia, avalancheFuji],
   connectors: [
     jaw({
       apiKey: process.env.NEXT_PUBLIC_JAW_API_KEY!,
@@ -21,7 +21,8 @@ export const config = createConfig({
     }),
   ],
   transports: {
-    [base.id]: http(),
+    [baseSepolia.id]: http(),
     [arbitrumSepolia.id]: http(),
+    [avalancheFuji.id]: http(),
   },
 })
