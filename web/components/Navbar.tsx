@@ -74,24 +74,12 @@ export function Navbar() {
         </Link>
 
         {/* Center nav links */}
-        <div className="hidden sm:flex items-center gap-6">
+        <div className="flex items-center gap-6">
           <Link
             href="/markets"
-            className="text-[13px] text-white/50 hover:text-white/80 transition-colors"
+            className="text-[13px] text-white/70 hover:text-white transition-colors"
           >
-            Trade
-          </Link>
-          <Link
-            href="/portfolio"
-            className="text-[13px] text-white/50 hover:text-white/80 transition-colors"
-          >
-            Portfolio
-          </Link>
-          <Link
-            href="/verify"
-            className="text-[13px] text-white/50 hover:text-white/80 transition-colors"
-          >
-            Verify
+            Markets
           </Link>
         </div>
 
