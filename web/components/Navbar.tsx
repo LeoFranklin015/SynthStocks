@@ -81,6 +81,12 @@ export function Navbar() {
           >
             Markets
           </Link>
+          <Link
+            href="/portfolio"
+            className="text-[13px] text-white/70 hover:text-white transition-colors"
+          >
+            Portfolio
+          </Link>
         </div>
 
         {/* Connect / Account */}
