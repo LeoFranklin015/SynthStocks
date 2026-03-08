@@ -2,6 +2,7 @@
 import { useState, useEffect, useRef } from "react"
 import Link from "next/link"
 import { useAccount, useBalance } from "wagmi"
+import { formatUnits } from "viem"
 import { useConnect, useDisconnect } from "@jaw.id/wagmi"
 import { config } from "@/config/wagmi"
 import { Copy, LogOut, Check } from "lucide-react"
@@ -75,7 +76,7 @@ export function Navbar() {
         {/* Center nav links */}
         <div className="hidden sm:flex items-center gap-6">
           <Link
-            href="/trade"
+            href="/markets"
             className="text-[13px] text-white/50 hover:text-white/80 transition-colors"
           >
             Trade
@@ -133,7 +134,7 @@ export function Navbar() {
                     <div className="bg-white/[0.04] rounded-xl px-3 py-2.5">
                       <p className="text-[11px] text-white/40 mb-0.5">Balance</p>
                       <p className="text-[16px] font-semibold text-white">
-                        {formatBalance(balance.formatted)}{" "}
+                        {formatBalance(formatUnits(balance.value, balance.decimals))}{" "}
                         <span className="text-[12px] font-normal text-white/50">
                           {balance.symbol}
                         </span>

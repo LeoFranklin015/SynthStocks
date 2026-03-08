@@ -3,9 +3,26 @@
 @theme inline {
   --color-background: #000000;
   --color-foreground: #ededed;
+  --color-card: #0c0c0c;
+  --color-card-foreground: #ededed;
+  --color-muted: #171717;
+  --color-muted-foreground: #737373;
+  --color-border: #1e1e1e;
+  --color-input: #1e1e1e;
+  --color-ring: #404040;
+  --color-primary: #ededed;
+  --color-primary-foreground: #0a0a0a;
+  --color-secondary: #171717;
+  --color-secondary-foreground: #ededed;
+  --color-accent: #171717;
+  --color-accent-foreground: #ededed;
+  --color-destructive: #ef4444;
+  --color-popover: #0c0c0c;
+  --color-popover-foreground: #ededed;
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
   --animate-scroll-left: scroll-left 40s linear infinite;
+  --animate-ticker: ticker 60s linear infinite;
 }
 
 body {
@@ -21,6 +38,15 @@ body {
   100% {
     transform: translateX(-50%);
   }
+}
+
+@keyframes ticker {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
+
+.animate-ticker {
+  animation: ticker 60s linear infinite;
 }
 
 /* Scattered dot particle field */

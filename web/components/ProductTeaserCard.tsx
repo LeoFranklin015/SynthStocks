@@ -24,7 +24,7 @@ export const ProductTeaserCard = (props: ProductTeaserCardProps) => {
     videoSrc = "/candles.mp4",
     posterSrc = "",
     primaryButtonText = "Start Trading",
-    primaryButtonHref = "/trade",
+    primaryButtonHref = "/markets",
   } = props
 
   // @return
