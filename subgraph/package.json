@@ -6,10 +6,10 @@
     "codegen": "graph codegen",
     "build:base-sepolia": "graph build --network base-sepolia",
     "build:arbitrum-sepolia": "graph build --network arbitrum-sepolia",
-    "deploy:base-sepolia": "graph deploy synth-token-base --version-label v0.0.2 --network base-sepolia --node https://api.studio.thegraph.com/deploy/",
-    "deploy:arbitrum-sepolia": "graph deploy synth-token-arb --version-label v0.0.1 --network arbitrum-sepolia --node https://api.studio.thegraph.com/deploy/",
+    "deploy:base-sepolia": "graph deploy synth-token-base --version-label v0.0.3 --network base-sepolia --node https://api.studio.thegraph.com/deploy/",
+    "deploy:arbitrum-sepolia": "graph deploy synth-token-arb --version-label v0.0.2 --network arbitrum-sepolia --node https://api.studio.thegraph.com/deploy/",
     "build:fuji": "graph build --network fuji",
-    "deploy:fuji": "graph deploy synth-token-avax --version-label v0.0.1 --network fuji --node https://api.studio.thegraph.com/deploy/"
+    "deploy:fuji": "graph deploy synth-token-avax --version-label v0.0.2 --network fuji --node https://api.studio.thegraph.com/deploy/"
   },
   "dependencies": {
     "@graphprotocol/graph-cli": "^0.93.2",
