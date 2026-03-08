@@ -1,6 +1,6 @@
 "use client"
 
-import { PortfolioNavbar } from "@/components/PortfolioNavbar"
+import { Navbar } from "@/components/Navbar"
 import { MarketTickerBar } from "@/components/markets/MarketTickerBar"
 import { AssetColumns } from "@/components/markets/AssetColumns"
 import { ProductGrid } from "@/components/markets/ProductGrid"
@@ -11,10 +11,10 @@ export default function MarketsPage() {
   const { assets, loading, error, refetch } = useStockQuotes()
 
   return (
-    <div className="min-h-screen bg-background">
-      <PortfolioNavbar />
+    <div className="min-h-screen bg-black">
+      <Navbar />
       <Toaster theme="dark" position="bottom-right" />
-      <main className="pt-16 pb-16">
+      <main className="pt-24 pb-16">
         <MarketTickerBar />
         <div className="px-4 sm:px-6 lg:px-8 mt-8">
           <AssetColumns assets={assets} loading={loading} />

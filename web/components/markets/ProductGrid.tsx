@@ -74,7 +74,7 @@ export function ProductGrid({ assets, loading, error, onRefetch }: ProductGridPr
         className="mb-8"
       >
         <div className="flex items-center gap-3 flex-wrap">
-          <h1 className="text-3xl font-semibold text-foreground tracking-tight">
+          <h1 className="text-3xl font-semibold text-[#ededed] tracking-tight">
             Explore Assets
           </h1>
           {assets.some((a) => a.isLive) && (
@@ -84,7 +84,7 @@ export function ProductGrid({ assets, loading, error, onRefetch }: ProductGridPr
             </span>
           )}
         </div>
-        <p className="text-muted-foreground text-sm mt-1">
+        <p className="text-[#737373] text-sm mt-1">
           Real-time data • Updates every minute
         </p>
       </motion.div>
@@ -98,13 +98,13 @@ export function ProductGrid({ assets, loading, error, onRefetch }: ProductGridPr
       >
         <div className="flex flex-col lg:flex-row lg:items-center gap-4 mb-4">
           <div className="relative flex-1">
-            <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-[#737373]" />
             <input
               type="text"
               placeholder="Search asset name or ticker"
               value={search}
               onChange={(e) => setSearch(e.target.value)}
-              className="w-full pl-10 pr-4 py-2.5 rounded-xl bg-muted border border-border text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-muted focus:border-border transition-all duration-200"
+              className="w-full pl-10 pr-4 py-2.5 rounded-xl bg-[#171717] border border-[#1e1e1e] text-[#ededed] placeholder:text-[#737373] focus:outline-none focus:ring-2 focus:ring-[#171717] focus:border-[#1e1e1e] transition-all duration-200"
             />
           </div>
 
@@ -118,7 +118,7 @@ export function ProductGrid({ assets, loading, error, onRefetch }: ProductGridPr
                   "flex-shrink-0 px-4 py-2 rounded-full text-sm font-medium transition-all duration-200",
                   activeFilter === filter
                     ? "bg-zinc-900 text-white shadow-sm"
-                    : "bg-muted text-muted-foreground hover:bg-muted/80 hover:text-foreground"
+                    : "bg-[#171717] text-[#737373] hover:bg-[#171717]/80 hover:text-[#ededed]"
                 )}
               >
                 {filter}
@@ -129,15 +129,15 @@ export function ProductGrid({ assets, loading, error, onRefetch }: ProductGridPr
 
         {/* View + Sort */}
         <div className="flex items-center justify-end gap-2">
-          <div className="flex rounded-lg border border-border overflow-hidden bg-muted/40">
+          <div className="flex rounded-lg border border-[#1e1e1e] overflow-hidden bg-[#171717]/40">
             <button
               type="button"
               onClick={() => setView("grid")}
               className={cn(
                 "p-2.5 transition-all duration-200",
                 view === "grid"
-                  ? "bg-card text-foreground shadow-sm"
-                  : "text-muted-foreground hover:text-foreground"
+                  ? "bg-[#0c0c0c] text-[#ededed] shadow-sm"
+                  : "text-[#737373] hover:text-[#ededed]"
               )}
               aria-label="Grid view"
             >
@@ -149,8 +149,8 @@ export function ProductGrid({ assets, loading, error, onRefetch }: ProductGridPr
               className={cn(
                 "p-2.5 transition-all duration-200",
                 view === "list"
-                  ? "bg-card text-foreground shadow-sm"
-                  : "text-muted-foreground hover:text-foreground"
+                  ? "bg-[#0c0c0c] text-[#ededed] shadow-sm"
+                  : "text-[#737373] hover:text-[#ededed]"
               )}
               aria-label="List view"
             >
@@ -161,7 +161,7 @@ export function ProductGrid({ assets, loading, error, onRefetch }: ProductGridPr
             <button
               type="button"
               onClick={() => setSortOpen(!sortOpen)}
-              className="flex items-center gap-2 px-4 py-2.5 rounded-xl bg-muted border border-border text-foreground text-sm font-medium hover:bg-muted/80 transition-all duration-200"
+              className="flex items-center gap-2 px-4 py-2.5 rounded-xl bg-[#171717] border border-[#1e1e1e] text-[#ededed] text-sm font-medium hover:bg-[#171717]/80 transition-all duration-200"
             >
               {SORT_OPTIONS.find((o) => o.value === sort)?.label ?? "Sort"}
               <ChevronDown
@@ -184,7 +184,7 @@ export function ProductGrid({ assets, loading, error, onRefetch }: ProductGridPr
                     animate={{ opacity: 1, y: 0 }}
                     exit={{ opacity: 0, y: -8 }}
                     transition={{ duration: 0.2 }}
-                    className="absolute right-0 top-full mt-1 py-1 w-48 rounded-xl bg-card border border-border shadow-lg z-20"
+                    className="absolute right-0 top-full mt-1 py-1 w-48 rounded-xl bg-[#0c0c0c] border border-[#1e1e1e] shadow-lg z-20"
                   >
                     {SORT_OPTIONS.map((opt) => (
                       <button
@@ -197,8 +197,8 @@ export function ProductGrid({ assets, loading, error, onRefetch }: ProductGridPr
                         className={cn(
                           "w-full px-4 py-2 text-left text-sm transition-colors",
                           sort === opt.value
-                            ? "text-foreground bg-muted font-medium"
-                            : "text-muted-foreground hover:text-foreground hover:bg-muted/60"
+                            ? "text-[#ededed] bg-[#171717] font-medium"
+                            : "text-[#737373] hover:text-[#ededed] hover:bg-[#171717]/60"
                         )}
                       >
                         {opt.label}
@@ -235,7 +235,7 @@ export function ProductGrid({ assets, loading, error, onRefetch }: ProductGridPr
             {[...Array(6)].map((_, i) => (
               <div
                 key={i}
-                className="h-64 rounded-2xl bg-muted animate-pulse"
+                className="h-64 rounded-2xl bg-[#171717] animate-pulse"
               />
             ))}
           </div>
@@ -268,7 +268,7 @@ export function ProductGrid({ assets, loading, error, onRefetch }: ProductGridPr
             animate={{ opacity: 1 }}
             className="text-center py-20"
           >
-            <p className="text-muted-foreground">No assets match your search.</p>
+            <p className="text-[#737373]">No assets match your search.</p>
           </motion.div>
         ) : null}
       </AnimatePresence>

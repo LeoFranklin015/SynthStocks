@@ -2,7 +2,7 @@
 
 import { use } from "react"
 import { notFound } from "next/navigation"
-import { PortfolioNavbar } from "@/components/PortfolioNavbar"
+import { Navbar } from "@/components/Navbar"
 import { AssetDetailView } from "@/components/markets/AssetDetailView"
 import { getAssetByTicker } from "@/lib/assets"
 import { Toaster } from "sonner"
@@ -20,10 +20,10 @@ export default function AssetPage({ params }: Props) {
   }
 
   return (
-    <div className="min-h-screen bg-background">
-      <PortfolioNavbar />
+    <div className="min-h-screen bg-black">
+      <Navbar />
       <Toaster theme="dark" position="bottom-right" />
-      <main className="pt-20 pb-16 px-4 sm:px-6 lg:px-8">
+      <main className="pt-28 pb-16 px-4 sm:px-6 lg:px-8">
         <AssetDetailView asset={asset} />
       </main>
     </div>

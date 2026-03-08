@@ -18,9 +18,9 @@ function ColumnItem({
     <motion.div
       whileHover={{ x: 4 }}
       transition={{ duration: 0.2 }}
-      className="flex items-center gap-3 p-3 rounded-xl hover:bg-muted/60 border border-transparent hover:border-border/60 transition-all duration-200 group"
+      className="flex items-center gap-3 p-3 rounded-xl hover:bg-[#171717]/60 border border-transparent hover:border-[#1e1e1e]/60 transition-all duration-200 group"
     >
-      <div className="w-9 h-9 rounded-lg flex items-center justify-center flex-shrink-0 bg-muted overflow-hidden">
+      <div className="w-9 h-9 rounded-lg flex items-center justify-center flex-shrink-0 bg-[#171717] overflow-hidden">
         <img
           src={getStockLogoUrl(asset.ticker)}
           alt={asset.ticker}
@@ -28,13 +28,13 @@ function ColumnItem({
         />
       </div>
       <div className="min-w-0 flex-1">
-        <p className="text-sm font-semibold text-foreground truncate">
+        <p className="text-sm font-semibold text-[#ededed] truncate">
           {asset.ticker}
         </p>
-        <p className="text-xs text-muted-foreground truncate">{asset.name}</p>
+        <p className="text-xs text-[#737373] truncate">{asset.name}</p>
       </div>
       <div className="text-right flex-shrink-0">
-        <p className="text-sm font-semibold text-foreground">
+        <p className="text-sm font-semibold text-[#ededed]">
           ${asset.price.toFixed(2)}
         </p>
         {type === "gainers" && (
@@ -54,10 +54,10 @@ function ColumnItem({
           </p>
         )}
         {type === "trending" && asset.marketCap && (
-          <p className="text-xs text-muted-foreground">{asset.marketCap}</p>
+          <p className="text-xs text-[#737373]">{asset.marketCap}</p>
         )}
         {type === "newlyAdded" && (
-          <p className="text-xs text-muted-foreground">
+          <p className="text-xs text-[#737373]">
             {asset.addedDate ?? `${asset.category} Stock`}
           </p>
         )}
@@ -82,11 +82,11 @@ function Column({
       initial={{ opacity: 0, y: 12 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.4, delay }}
-      className="flex-1 min-w-0 rounded-2xl bg-card border border-border p-5 shadow-sm hover:shadow-md transition-shadow duration-300"
+      className="flex-1 min-w-0 rounded-2xl bg-[#0c0c0c] border border-[#1e1e1e] p-5 shadow-sm hover:shadow-md transition-shadow duration-300"
     >
       <div className="flex items-center justify-between mb-4">
         <div className="flex items-center gap-2">
-          <h3 className="text-base font-semibold text-foreground">{title}</h3>
+          <h3 className="text-base font-semibold text-[#ededed]">{title}</h3>
           {items.some((a) => a.isLive) && (
             <span className="flex items-center gap-1 text-[10px] text-emerald-600 font-medium">
               <Radio className="w-3 h-3" />
@@ -126,7 +126,7 @@ export function AssetColumns({ assets, loading }: AssetColumnsProps) {
     return (
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-10">
         {[1, 2, 3].map((i) => (
-          <div key={i} className="h-48 rounded-2xl bg-zinc-100 animate-pulse" />
+          <div key={i} className="h-48 rounded-2xl bg-[#171717] animate-pulse" />
         ))}
       </div>
     )

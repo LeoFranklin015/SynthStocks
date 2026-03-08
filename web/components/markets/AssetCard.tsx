@@ -45,7 +45,7 @@ export function AssetCard({
         transition: { duration: 0.2 },
       }}
       className={cn(
-        "group relative rounded-2xl bg-card border border-border p-5 shadow-sm hover:shadow-lg hover:border-border/80 transition-all duration-300 overflow-hidden cursor-pointer",
+        "group relative rounded-2xl bg-[#0c0c0c] border border-[#1e1e1e] p-5 shadow-sm hover:shadow-lg hover:border-[#1e1e1e]/80 transition-all duration-300 overflow-hidden cursor-pointer",
         variant === "list" && "flex flex-row items-center gap-6"
       )}
     >
@@ -58,7 +58,7 @@ export function AssetCard({
         {/* Top: Icon, Ticker, Name, Live badge */}
         <div className="flex items-start justify-between gap-3">
           <div className="flex items-center gap-3 min-w-0">
-            <div className="w-10 h-10 rounded-lg flex items-center justify-center flex-shrink-0 bg-muted overflow-hidden">
+            <div className="w-10 h-10 rounded-lg flex items-center justify-center flex-shrink-0 bg-[#171717] overflow-hidden">
               <img
                 src={getStockLogoUrl(asset.ticker)}
                 alt={asset.ticker}
@@ -67,7 +67,7 @@ export function AssetCard({
             </div>
             <div className="min-w-0">
               <div className="flex items-center gap-2">
-                <p className="text-sm font-semibold text-foreground truncate">
+                <p className="text-sm font-semibold text-[#ededed] truncate">
                   {asset.ticker}
                 </p>
                 {isLive && (
@@ -77,7 +77,7 @@ export function AssetCard({
                   </span>
                 )}
               </div>
-              <p className="text-xs text-muted-foreground truncate">{asset.name}</p>
+              <p className="text-xs text-[#737373] truncate">{asset.name}</p>
             </div>
           </div>
         </div>
@@ -89,7 +89,7 @@ export function AssetCard({
             initial={{ opacity: 0.7, scale: 1.02 }}
             animate={{ opacity: 1, scale: 1 }}
             transition={{ duration: 0.3 }}
-            className="text-2xl font-bold text-foreground tracking-tight tabular-nums"
+            className="text-2xl font-bold text-[#ededed] tracking-tight tabular-nums"
           >
             ${asset.price.toFixed(2)}
           </motion.p>
@@ -109,10 +109,10 @@ export function AssetCard({
               {positive ? "+" : ""}
               {asset.change24hPercent.toFixed(2)}%)
             </span>
-            <span className="text-muted-foreground font-normal">24H</span>
+            <span className="text-[#737373] font-normal">24H</span>
           </div>
           {asset.high24h != null && asset.low24h != null && variant === "grid" && (
-            <p className="text-[10px] text-muted-foreground mt-1">
+            <p className="text-[10px] text-[#737373] mt-1">
               Day: ${asset.low24h.toFixed(2)} – ${asset.high24h.toFixed(2)}
             </p>
           )}

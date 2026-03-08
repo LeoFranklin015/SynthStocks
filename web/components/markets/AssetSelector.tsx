@@ -76,7 +76,7 @@ export function AssetSelector({
       <button
         type="button"
         onClick={() => setIsOpen(!isOpen)}
-        className="flex items-center gap-2 px-3 py-2 rounded-lg hover:bg-muted/50 transition-colors"
+        className="flex items-center gap-2 px-3 py-2 rounded-lg hover:bg-[#171717]/50 transition-colors"
       >
         <div
           className={cn(
@@ -106,14 +106,14 @@ export function AssetSelector({
             {selectedAsset.icon?.slice(0, 1)}
           </span>
         </div>
-        <span className="text-sm font-medium text-foreground">{selectedAsset.ticker}</span>
-        <ChevronDown className="w-4 h-4 text-muted-foreground" />
+        <span className="text-sm font-medium text-[#ededed]">{selectedAsset.ticker}</span>
+        <ChevronDown className="w-4 h-4 text-[#737373]" />
       </button>
 
       {isOpen && (
-        <div className="absolute right-0 top-full mt-2 w-80 bg-card border border-border rounded-xl shadow-lg z-50 max-h-96 overflow-y-auto">
+        <div className="absolute right-0 top-full mt-2 w-80 bg-[#0c0c0c] border border-[#1e1e1e] rounded-xl shadow-lg z-50 max-h-96 overflow-y-auto">
           <div className="p-2">
-            <div className="text-xs text-muted-foreground px-3 py-2 font-medium">
+            <div className="text-xs text-[#737373] px-3 py-2 font-medium">
               Select Payment Asset
             </div>
             {availableAssets.map((asset) => {
@@ -127,8 +127,8 @@ export function AssetSelector({
                     setIsOpen(false)
                   }}
                   className={cn(
-                    "w-full flex items-center gap-3 px-3 py-2.5 rounded-lg hover:bg-muted/50 transition-colors",
-                    selectedAsset.ticker === asset.ticker && "bg-muted"
+                    "w-full flex items-center gap-3 px-3 py-2.5 rounded-lg hover:bg-[#171717]/50 transition-colors",
+                    selectedAsset.ticker === asset.ticker && "bg-[#171717]"
                   )}
                 >
                   <div
@@ -160,15 +160,15 @@ export function AssetSelector({
                     </span>
                   </div>
                   <div className="flex-1 text-left">
-                    <div className="text-sm font-medium text-foreground">{asset.ticker}</div>
-                    <div className="text-xs text-muted-foreground truncate">{asset.name}</div>
+                    <div className="text-sm font-medium text-[#ededed]">{asset.ticker}</div>
+                    <div className="text-xs text-[#737373] truncate">{asset.name}</div>
                   </div>
                   <div className="text-right">
-                    <div className="text-sm font-medium text-foreground">
+                    <div className="text-sm font-medium text-[#ededed]">
                       ${asset.price.toFixed(2)}
                     </div>
                     {balance > 0 && (
-                      <div className="text-xs text-muted-foreground">{balance.toFixed(4)}</div>
+                      <div className="text-xs text-[#737373]">{balance.toFixed(4)}</div>
                     )}
                   </div>
                 </button>

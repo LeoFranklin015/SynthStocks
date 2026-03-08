@@ -114,7 +114,7 @@ export function AssetDetailView({ asset }: { asset: AssetData }) {
         <div className="xl:col-span-2 space-y-6">
           {/* Asset header */}
           <div className="flex items-start gap-4">
-            <div className="w-12 h-12 rounded-xl flex items-center justify-center flex-shrink-0 bg-muted overflow-hidden">
+            <div className="w-12 h-12 rounded-xl flex items-center justify-center flex-shrink-0 bg-[#171717] overflow-hidden">
               <img
                 src={getStockLogoUrl(liveData.ticker)}
                 alt={liveData.ticker}
@@ -122,11 +122,11 @@ export function AssetDetailView({ asset }: { asset: AssetData }) {
               />
             </div>
             <div className="flex-1 min-w-0">
-              <h1 className="text-xl font-semibold text-foreground">
+              <h1 className="text-xl font-semibold text-[#ededed]">
                 {liveData.name}{" "}
-                <span className="text-muted-foreground">{liveData.ticker}</span>
+                <span className="text-[#737373]">{liveData.ticker}</span>
               </h1>
-              <p className="text-xs text-muted-foreground mt-1">
+              <p className="text-xs text-[#737373] mt-1">
                 {liveData.isLive ? (
                   <span className="text-emerald-400">Live</span>
                 ) : (
@@ -135,10 +135,10 @@ export function AssetDetailView({ asset }: { asset: AssetData }) {
               </p>
               <div className="flex items-baseline gap-4 mt-3">
                 {liveData.isLoading ? (
-                  <span className="text-3xl font-bold text-muted-foreground animate-pulse">---</span>
+                  <span className="text-3xl font-bold text-[#737373] animate-pulse">---</span>
                 ) : (
                   <>
-                    <span className="text-3xl font-bold text-foreground tabular-nums">
+                    <span className="text-3xl font-bold text-[#ededed] tabular-nums">
                       ${liveData.price.toFixed(2)}
                     </span>
                     <span
@@ -168,7 +168,7 @@ export function AssetDetailView({ asset }: { asset: AssetData }) {
                   "px-4 py-2 rounded-lg text-sm font-medium transition-all",
                   chartRange === range.key
                     ? "bg-white text-black"
-                    : "bg-muted text-muted-foreground hover:bg-muted/80 hover:text-foreground"
+                    : "bg-[#171717] text-[#737373] hover:bg-[#171717]/80 hover:text-[#ededed]"
                 )}
               >
                 {range.label}
@@ -177,7 +177,7 @@ export function AssetDetailView({ asset }: { asset: AssetData }) {
           </div>
 
           {/* Chart */}
-          <div className="rounded-2xl bg-card border border-border p-6">
+          <div className="rounded-2xl bg-[#0c0c0c] border border-[#1e1e1e] p-6">
             <div className="h-[360px] w-full">
               <ResponsiveContainer width="100%" height="100%">
                 <AreaChart data={chartData} margin={{ top: 10, right: 30, left: 0, bottom: 0 }}>
@@ -213,8 +213,8 @@ export function AssetDetailView({ asset }: { asset: AssetData }) {
                   <Tooltip
                     content={({ active, payload }) =>
                       active && payload?.[0] ? (
-                        <div className="bg-card px-4 py-2 rounded-lg shadow-lg border border-border">
-                          <p className="text-sm font-semibold text-foreground tabular-nums">
+                        <div className="bg-[#0c0c0c] px-4 py-2 rounded-lg shadow-lg border border-[#1e1e1e]">
+                          <p className="text-sm font-semibold text-[#ededed] tabular-nums">
                             ${Number(payload[0].value).toFixed(2)}
                           </p>
                         </div>
@@ -234,14 +234,14 @@ export function AssetDetailView({ asset }: { asset: AssetData }) {
           </div>
 
           {/* About */}
-          <div className="rounded-2xl bg-card border border-border p-6">
-            <h2 className="text-lg font-bold text-foreground mb-4">About</h2>
-            <p className="text-sm text-muted-foreground leading-relaxed mb-4">
+          <div className="rounded-2xl bg-[#0c0c0c] border border-[#1e1e1e] p-6">
+            <h2 className="text-lg font-bold text-[#ededed] mb-4">About</h2>
+            <p className="text-sm text-[#737373] leading-relaxed mb-4">
               {showMore ? aboutText : aboutText.slice(0, 150) + "..."}{" "}
               <button
                 type="button"
                 onClick={() => setShowMore(!showMore)}
-                className="text-foreground font-medium hover:underline"
+                className="text-[#ededed] font-medium hover:underline"
               >
                 {showMore ? "Show Less" : "Show More"}
               </button>
@@ -250,7 +250,7 @@ export function AssetDetailView({ asset }: { asset: AssetData }) {
               {categoryTags.map((cat) => (
                 <span
                   key={cat}
-                  className="px-3 py-1 rounded-full text-xs font-medium bg-muted text-muted-foreground"
+                  className="px-3 py-1 rounded-full text-xs font-medium bg-[#171717] text-[#737373]"
                 >
                   {cat}
                 </span>
@@ -259,34 +259,34 @@ export function AssetDetailView({ asset }: { asset: AssetData }) {
           </div>
 
           {/* Statistics */}
-          <div className="rounded-2xl bg-card border border-border p-6">
-            <h2 className="text-lg font-bold text-foreground mb-6">Statistics</h2>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6 pb-6 border-b border-border">
+          <div className="rounded-2xl bg-[#0c0c0c] border border-[#1e1e1e] p-6">
+            <h2 className="text-lg font-bold text-[#ededed] mb-6">Statistics</h2>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6 pb-6 border-b border-[#1e1e1e]">
               <div className="space-y-3">
-                <p className="text-sm font-medium text-foreground mb-3">24H Price</p>
+                <p className="text-sm font-medium text-[#ededed] mb-3">24H Price</p>
                 {[
                   ["Open", open24h],
                   ["High", high24h],
                   ["Low", low24h],
                 ].map(([label, val]) => (
                   <div key={label as string} className="flex justify-between text-sm">
-                    <span className="text-muted-foreground">{label}</span>
-                    <span className="text-foreground font-medium tabular-nums">
+                    <span className="text-[#737373]">{label}</span>
+                    <span className="text-[#ededed] font-medium tabular-nums">
                       ${(val as number).toFixed(2)}
                     </span>
                   </div>
                 ))}
               </div>
               <div className="space-y-3">
-                <p className="text-sm font-medium text-foreground mb-3">Market Data</p>
+                <p className="text-sm font-medium text-[#ededed] mb-3">Market Data</p>
                 {[
                   ["Market Cap", liveData.marketCap ?? "---"],
                   ["Category", liveData.category],
                   ["Shares Per Token", "1.0000"],
                 ].map(([label, val]) => (
                   <div key={label} className="flex justify-between text-sm">
-                    <span className="text-muted-foreground">{label}</span>
-                    <span className="text-foreground font-medium">{val}</span>
+                    <span className="text-[#737373]">{label}</span>
+                    <span className="text-[#ededed] font-medium">{val}</span>
                   </div>
                 ))}
               </div>
@@ -296,9 +296,9 @@ export function AssetDetailView({ asset }: { asset: AssetData }) {
 
         {/* Right: Buy/Sell Panel */}
         <div className="xl:col-span-1">
-          <div className="sticky top-20 rounded-2xl bg-card border border-border overflow-hidden">
+          <div className="sticky top-20 rounded-2xl bg-[#0c0c0c] border border-[#1e1e1e] overflow-hidden">
             {/* Tabs */}
-            <div className="flex border-b border-border">
+            <div className="flex border-b border-[#1e1e1e]">
               {(["buy", "sell"] as const).map((tab) => (
                 <button
                   key={tab}
@@ -310,7 +310,7 @@ export function AssetDetailView({ asset }: { asset: AssetData }) {
                       ? tab === "buy"
                         ? "bg-emerald-500 text-white"
                         : "bg-red-500 text-white"
-                      : "text-muted-foreground hover:bg-muted hover:text-foreground"
+                      : "text-[#737373] hover:bg-[#171717] hover:text-[#ededed]"
                   )}
                 >
                   {tab}
@@ -321,10 +321,10 @@ export function AssetDetailView({ asset }: { asset: AssetData }) {
             <div className="p-6 space-y-4">
               {/* Pay */}
               <div>
-                <p className="text-xs text-muted-foreground mb-2">
+                <p className="text-xs text-[#737373] mb-2">
                   {activeTab === "buy" ? "You Pay" : "You Sell"}
                 </p>
-                <div className="flex items-center gap-3 p-3 rounded-xl bg-muted/40 border border-border focus-within:border-white/20 transition-colors">
+                <div className="flex items-center gap-3 p-3 rounded-xl bg-[#171717]/40 border border-[#1e1e1e] focus-within:border-white/20 transition-colors">
                   <input
                     type="text"
                     inputMode="decimal"
@@ -333,19 +333,19 @@ export function AssetDetailView({ asset }: { asset: AssetData }) {
                       const val = e.target.value.replace(/[^0-9.]/g, "")
                       activeTab === "buy" ? handlePayChange(val) : handleReceiveChange(val)
                     }}
-                    className="flex-1 bg-transparent text-foreground text-lg font-medium focus:outline-none min-w-0 placeholder:text-muted-foreground"
+                    className="flex-1 bg-transparent text-[#ededed] text-lg font-medium focus:outline-none min-w-0 placeholder:text-[#737373]"
                     placeholder="0.00"
                   />
-                  <div className="flex items-center gap-2 flex-shrink-0 px-3 py-1.5 rounded-lg bg-muted">
+                  <div className="flex items-center gap-2 flex-shrink-0 px-3 py-1.5 rounded-lg bg-[#171717]">
                     {activeTab === "buy" ? (
                       <>
                         <div className="w-5 h-5 rounded-full bg-blue-500 flex items-center justify-center text-white text-[10px] font-bold">$</div>
-                        <span className="text-sm font-medium text-foreground">USD</span>
+                        <span className="text-sm font-medium text-[#ededed]">USD</span>
                       </>
                     ) : (
                       <>
                         <img src={getStockLogoUrl(asset.ticker)} alt={asset.ticker} className="w-5 h-5 rounded-full" />
-                        <span className="text-sm font-medium text-foreground">{asset.ticker}</span>
+                        <span className="text-sm font-medium text-[#ededed]">{asset.ticker}</span>
                       </>
                     )}
                   </div>
@@ -354,17 +354,17 @@ export function AssetDetailView({ asset }: { asset: AssetData }) {
 
               {/* Arrow */}
               <div className="flex justify-center">
-                <div className="w-10 h-10 rounded-full bg-muted border border-border flex items-center justify-center">
-                  <ArrowDown className="w-5 h-5 text-muted-foreground" />
+                <div className="w-10 h-10 rounded-full bg-[#171717] border border-[#1e1e1e] flex items-center justify-center">
+                  <ArrowDown className="w-5 h-5 text-[#737373]" />
                 </div>
               </div>
 
               {/* Receive */}
               <div>
-                <p className="text-xs text-muted-foreground mb-2">
+                <p className="text-xs text-[#737373] mb-2">
                   {activeTab === "buy" ? "You Receive" : "You Get"}
                 </p>
-                <div className="flex items-center gap-3 p-3 rounded-xl bg-muted/40 border border-border focus-within:border-white/20 transition-colors">
+                <div className="flex items-center gap-3 p-3 rounded-xl bg-[#171717]/40 border border-[#1e1e1e] focus-within:border-white/20 transition-colors">
                   <input
                     type="text"
                     inputMode="decimal"
@@ -373,19 +373,19 @@ export function AssetDetailView({ asset }: { asset: AssetData }) {
                       const val = e.target.value.replace(/[^0-9.]/g, "")
                       activeTab === "buy" ? handleReceiveChange(val) : handlePayChange(val)
                     }}
-                    className="flex-1 bg-transparent text-foreground text-lg font-medium focus:outline-none min-w-0 placeholder:text-muted-foreground"
+                    className="flex-1 bg-transparent text-[#ededed] text-lg font-medium focus:outline-none min-w-0 placeholder:text-[#737373]"
                     placeholder="0.00"
                   />
-                  <div className="flex items-center gap-2 flex-shrink-0 px-3 py-1.5 rounded-lg bg-muted">
+                  <div className="flex items-center gap-2 flex-shrink-0 px-3 py-1.5 rounded-lg bg-[#171717]">
                     {activeTab === "buy" ? (
                       <>
                         <img src={getStockLogoUrl(asset.ticker)} alt={asset.ticker} className="w-5 h-5 rounded-full" />
-                        <span className="text-sm font-medium text-foreground">{asset.ticker}</span>
+                        <span className="text-sm font-medium text-[#ededed]">{asset.ticker}</span>
                       </>
                     ) : (
                       <>
                         <div className="w-5 h-5 rounded-full bg-blue-500 flex items-center justify-center text-white text-[10px] font-bold">$</div>
-                        <span className="text-sm font-medium text-foreground">USD</span>
+                        <span className="text-sm font-medium text-[#ededed]">USD</span>
                       </>
                     )}
                   </div>
@@ -395,19 +395,19 @@ export function AssetDetailView({ asset }: { asset: AssetData }) {
               {/* Rate info */}
               <div className="space-y-2 pt-2 text-sm">
                 <div className="flex justify-between">
-                  <span className="text-muted-foreground">Price</span>
-                  <span className="text-foreground tabular-nums">
+                  <span className="text-[#737373]">Price</span>
+                  <span className="text-[#ededed] tabular-nums">
                     1 {asset.ticker} = ${liveData.price.toFixed(2)}
                   </span>
                 </div>
                 <div className="flex justify-between">
-                  <span className="text-muted-foreground">Total Value</span>
-                  <span className="text-foreground tabular-nums">
+                  <span className="text-[#737373]">Total Value</span>
+                  <span className="text-[#ededed] tabular-nums">
                     ${(parseFloat(payAmount || "0")).toFixed(2)}
                   </span>
                 </div>
                 <div className="flex justify-between items-center">
-                  <span className="text-muted-foreground flex items-center gap-1">
+                  <span className="text-[#737373] flex items-center gap-1">
                     Fee <HelpCircle className="w-3 h-3" />
                   </span>
                   <span className="text-emerald-400 text-xs font-medium">Free</span>
@@ -436,7 +436,7 @@ export function AssetDetailView({ asset }: { asset: AssetData }) {
                   : `Sell ${asset.ticker}`}
               </button>
 
-              <p className="text-[11px] text-muted-foreground leading-relaxed text-center">
+              <p className="text-[11px] text-[#737373] leading-relaxed text-center">
                 Synthetic asset prices powered by Chainlink oracles. Settlement on Arbitrum Sepolia.
               </p>
             </div>
